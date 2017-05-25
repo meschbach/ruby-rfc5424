@@ -70,15 +70,20 @@ module MEE
 		end
 
 		class LoggerProtocolAdapter < Logger
+			attr_accessor :protocol
+
 			def initialize( protocol )
 				super(nil)
 				@logdev = self
-				@protocol = protocol
+				self.protocol = protocol
 			end
 
 			def write( entry )
-				@protocol.message( entry )
+				self.protocol.message( entry )
 			end
+
+			def name; protocol.meta.proc_name; end
+			def name=( new_value ) ; protocol.meta.proc_name = new_value; end
 		end
 
 		def self.tcp( host, port )

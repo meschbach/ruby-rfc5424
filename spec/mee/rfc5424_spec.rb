@@ -84,6 +84,7 @@ describe MEE::RFC5424 do
 		describe "TCP tests" do
 			it "Sends messages" do
 				target = MEE::RFC5424.tcp( ENV['SYSLOG_TCP_HOST'], ENV['SYSLOG_TCP_PORT'] )
+				target.name = "test-tcp-integ"
 				target.info { "There is still time for tea" }
 				target.error { "\U+1F600" }
 			end
@@ -94,6 +95,7 @@ describe MEE::RFC5424 do
 		describe "TLS tests" do
 			it "Sends messages" do
 				target = MEE::RFC5424.tls( ENV['SYSLOG_TLS_HOST'], ENV['SYSLOG_TLS_PORT'] )
+				target.name = "test-tls-integ"
 				target.info { "Day of the dead" }
 				target.error { "Going to loose my head" }
 			end
