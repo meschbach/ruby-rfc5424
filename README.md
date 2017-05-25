@@ -1,8 +1,6 @@
-# Mee::Rfc5424
+# MEE::Rfc5424
 
-Welcome to your new gem! In this directory, you'll find the files you need to be able to package up your Ruby library into a gem. Put your Ruby code in the file `lib/mee/rfc5424`. To experiment with that code, run `bin/console` for an interactive prompt.
-
-TODO: Delete this and the text above, and describe your gem
+Ruby loggger capable of logging against Syslog (RFC5424) over TCP and Syslog over TLS.  Logs may be in either non-transparent newline framing or octet counting framing.
 
 ## Installation
 
@@ -22,7 +20,21 @@ Or install it yourself as:
 
 ## Usage
 
-TODO: Write usage instructions here
+By default the loggers will use transparent octet counting.
+
+### TCP Syslog connection
+
+```ruby
+logger = MEE::RFC5424.tcp( 'syslog.host', 514 )
+logger.info { "TCP logging message" }
+```
+
+### TLS Syslog connection
+
+```ruby
+logger = MEE::RFC5424.tls( 'syslog.host', 10242 )
+logger.info { "TLS message logging" }
+```
 
 ## Development
 
