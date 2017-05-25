@@ -8,6 +8,7 @@ Gem::Specification.new do |spec|
   spec.version       = MEE::RFC5424::VERSION
   spec.authors       = ["Mark Eschbach"]
   spec.email         = ["meschbach@gmail.com"]
+  spec.license       = ["MIT"]
 
   spec.summary       = %q{Utilities for dealing with RFC5424}
   spec.description   = %q{Initial scope is to produce loggers for TLS compliant to RFC5424.}
