@@ -9,3 +9,5 @@
 /tmp/
 *.swp
 *.swo
+.ruby-version
+*.gem
