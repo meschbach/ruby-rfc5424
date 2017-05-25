@@ -61,6 +61,7 @@ describe MEE::RFC5424 do
 		before do
 			@transport = CapturingTransport.new
 			client = MEE::RFC5424::SyslogClient.new( @transport, :framing => MEE::RFC5424::OctetFraming.new() )
+			client.meta.host = "test.host.at.domain.invalid"
 			client.message( "frame 0" )
 			client.message( "frame 1" )
 			client.message( "\U+1F600\U+1F601" )
@@ -75,7 +76,7 @@ describe MEE::RFC5424 do
 		end
 
 		it "starts with message size" do
-			expect( @transport.last_frame.split(" ")[0] ).to eq( "74" )
+			expect( @transport.last_frame.split(" ")[0] ).to eq( "90" )
 		end
 	end
 
