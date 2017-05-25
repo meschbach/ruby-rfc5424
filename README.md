@@ -25,6 +25,8 @@ By default the loggers will use transparent octet counting.
 ### TCP Syslog connection
 
 ```ruby
+require 'mee/rfc5424'
+
 logger = MEE::RFC5424.tcp( 'syslog.host', 514 )
 logger.info { "TCP logging message" }
 ```
@@ -32,6 +34,8 @@ logger.info { "TCP logging message" }
 ### TLS Syslog connection
 
 ```ruby
+require 'mee/rfc5424'
+
 logger = MEE::RFC5424.tls( 'syslog.host', 10242 )
 logger.info { "TLS message logging" }
 ```
