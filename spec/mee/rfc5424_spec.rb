@@ -105,8 +105,12 @@ describe MEE::RFC5424 do
 				@target.error { "Going to loose my head" }
 			end
 
-			it "can send UTF-8 data" do
+			it "can send UTF-8 data contained in a ASCII string" do
 				@target.error { "\u2764" }
+			end
+
+			it "can send UTF-8 data encoded in a UTF8 string" do
+				@target.error { "\u2764".force_encoding( Encoding::UTF_8 ) }
 			end
 		end
 	end
