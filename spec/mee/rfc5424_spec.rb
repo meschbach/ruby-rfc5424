@@ -64,7 +64,7 @@ describe MEE::RFC5424 do
 			client.meta.host = "test.host.at.domain.invalid"
 			client.message( "frame 0" )
 			client.message( "frame 1" )
-			client.message( "\U+1F600\U+1F601" )
+			client.message( "\u1F600\u1F601" )
 		end
 
 		it "yeilds multiple frames" do
@@ -76,7 +76,7 @@ describe MEE::RFC5424 do
 		end
 
 		it "starts with message size" do
-			expect( @transport.last_frame.split(" ")[0] ).to eq( "90" )
+			expect( @transport.last_frame.split(" ")[0] ).to eq( "85" )
 		end
 	end
 
@@ -92,12 +92,19 @@ describe MEE::RFC5424 do
 	end
 
 	if ENV['SYSLOG_TLS_HOST'] and ENV['SYSLOG_TLS_PORT']
-		describe "TLS tests" do
-			it "Sends messages" do
-				target = MEE::RFC5424.tls( ENV['SYSLOG_TLS_HOST'], ENV['SYSLOG_TLS_PORT'] )
-				target.name = "test-tls-integ"
-				target.info { "Day of the dead" }
-				target.error { "Going to loose my head" }
+		describe "TLS transport" do
+			before do
+				@target = MEE::RFC5424.tls( ENV['SYSLOG_TLS_HOST'], ENV['SYSLOG_TLS_PORT'] )
+				@target.name = "test-tls-integ"
+			end
+
+			it "sends messages" do
+				@target.info { "Day of the dead" }
+				@target.error { "Going to loose my head" }
+			end
+
+			it "can send UTF-8 data" do
+				@target.error { "\u2764" }
 			end
 		end
 	end
