@@ -10,7 +10,7 @@ require 'time'
 module MEE
   module RFC5424
 		class Meta
-			attr_accessor :host, :proc_name, :facility, :pid
+			attr_accessor :host, :proc_name, :facility, :pid, :when
 
 			def initialize( props = {})
 				self.host = props[:host] || Socket.gethostname
@@ -21,7 +21,7 @@ module MEE
 
 			def header( params = {} )
 				severity = params[:severity] || Syslog::LOG_INFO
-				when_date = (params[:when] || DateTime.now).new_offset( 0 )
+				when_date = (@when || (params[:when] || DateTime.now) ).new_offset( 0 )
 				formatted_when = when_date.strftime("%FT%T.%3NZ")
 				priority = (facility * 8) + severity
 				"<#{priority}>1 #{formatted_when} #{self.host} #{proc_name} #{self.pid} - - \xEF\xBB\xBF"

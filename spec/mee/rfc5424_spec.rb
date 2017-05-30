@@ -62,6 +62,8 @@ describe MEE::RFC5424 do
 			@transport = CapturingTransport.new
 			client = MEE::RFC5424::SyslogClient.new( @transport, :framing => MEE::RFC5424::OctetFraming.new() )
 			client.meta.host = "test.host.at.domain.invalid"
+			client.meta.when = DateTime.parse( "2017-05-30T16:23:23.839" )
+			client.meta.pid = 17959
 			client.message( "frame 0" )
 			client.message( "frame 1" )
 			client.message( "\u1F600\u1F601" )
