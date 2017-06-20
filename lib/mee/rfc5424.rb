@@ -58,14 +58,50 @@ module MEE
 			end
 		end
 
+		class TCPFactory
+			def initialize( host, port )
+				@host = host
+				@port = port
+			end
+
+			def dial()
+				target = TCPSocket.new( @host, @port )
+				target
+			end
+		end
+
+		class TLSFactory < TCPFactory
+			def initialize( host, port )
+				super
+			end
+
+			def dial()
+				clear_text_transport = super
+				secure_transport = OpenSSL::SSL::SSLSocket.new clear_text_transport
+				secure_transport.connect
+				secure_transport
+			end
+		end
+
 		class SocketTransport
-			attr_accessor :socket
-			def initialize( socket )
-				self.socket = socket
+			attr_accessor :factory, :socket
+			def initialize( factory )
+				self.factory = factory
 			end
 
 			def send_frame( frame )
-				socket.write( frame )
+				self.socket = self.factory.dial() unless self.socket
+				retrying = false
+				begin
+					socket.write( frame )
+				rescue Exception
+					self.socket.close()
+					self.socket = self.factory.dial() unless self.socket
+					if !retrying
+						retrying = true
+						retry
+					end
+				end
 			end
 		end
 
@@ -87,16 +123,12 @@ module MEE
 		end
 
 		def self.tcp( host, port )
-			target = TCPSocket.new( host, port )
-			protocol = SyslogClient.new( SocketTransport.new( target ) )
+			protocol = SyslogClient.new( SocketTransport.new( TCPFactory.new( host, port ) ) )
 			LoggerProtocolAdapter.new( protocol )
 		end
 
 		def self.tls( host, port )
-			raw_transport = TCPSocket.new( host, port )
-			secure_transport = OpenSSL::SSL::SSLSocket.new raw_transport
-			secure_transport.connect
-			protocol = SyslogClient.new( SocketTransport.new( secure_transport )  )
+			protocol = SyslogClient.new( SocketTransport.new( TLSFactory.new( host, port ) )  )
 			LoggerProtocolAdapter.new( protocol )
 		end
   end
